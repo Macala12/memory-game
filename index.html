@@ -5,22 +5,96 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>🧠 Memory Game in JavaScript</title>
-
+        <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="assets/styles.css" />
-        <script src="assets/game.js" defer></script>
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>        <script src="assets/game.js" defer></script>
     </head>
     <body>
-        <div class="game">
-            <div class="controls">
-                <button>Start</button>
-                <div class="stats">
-                    <div class="moves">0 moves</div>
-                    <div class="timer">time: 0 sec</div>
+        <div class="homeScreen active">
+            <div class="home_card">
+                <h1 class="game_title">🧠 Memory Duel</h1>
+                <p class="game_subtitle">
+                    Beat the CPU, match more pairs, and win cash instantly
+                </p>
+
+                <div class="home_section reward_preview">
+                    <img src="./assets/dollars.png" width="20" />
+                    <span>Win <strong class="reward">50 Octacoin</strong></span>
+                </div>
+
+                <button class="start_game_btn">
+                    Start Game
+                </button>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="ui_panels">
+                <div class="octacoin">   
+                </div>
+                <div class="value_balance">
                 </div>
             </div>
-            <div class="board-container">
-                <div class="board" data-dimension="4"></div>
-                <div class="win">You won!</div>
+            <div class="reward_panel">
+                <img src="./assets/dollars.png" width="20px" height="20px" alt="gift">
+                <p>Win to get <span class="reward_ui"></span>!</p>
+            </div>
+            <div class="game">
+                <div class="control_box">
+                    <div class="controls">
+                        <div>
+                            <div class="user_img">
+                                <img src="https://api.dicebear.com/9.x/big-smile/svg?seed=michael&radius=50&backgroundType=gradientLinear&randomizeIds=true&skinColor=643d19,8c5a2b,a47539,c99c62&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf" width="60px" alt="">
+                            </div>
+                            <div class="name oppName">
+                                @datboiimo
+                            </div>
+                            <div class="indicator opponent">
+                                opponents turn
+                            </div>
+                        </div>
+                        <div class="stats">
+                            <div class="moves opponent_moves"></div>
+                            <div class="score opponent_score"></div>
+                        </div>
+                    </div>
+                    <h2>
+                        vs
+                    </h2>
+                    <div class="controls">
+                        <div>
+                            <div class="user_img">
+                                <img src="https://api.dicebear.com/9.x/big-smile/svg?seed=faithenwa2003@gmail.com&radius=50&backgroundType=gradientLinear&randomizeIds=true&skinColor=643d19,8c5a2b,a47539,c99c62&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf" width="60px" alt="">
+                            </div>
+                            <div class="name">
+                                You
+                            </div>
+                            <div class="indicator user">
+                                Your turn
+                            </div>
+                        </div>
+                        <div class="stats">
+                            <div class="moves user_moves"></div>
+                            <div class="score user_score"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="board-container">
+                    <div class="board" data-dimension="4"></div>
+                    <div class="win">You won!</div>
+                </div>
+            </div>
+            <div class="cancel">
+                <button class="cancel_btn">
+                    <i class="fi fi-sr-music-slash"></i>
+                </button>
+                <button class="cancel_btn">
+                    Leave Game
+                    <i class="fi fi-sr-leave" style="margin-left: 5px;"></i>
+                </button>
             </div>
         </div>
     </body>
