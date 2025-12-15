@@ -195,6 +195,7 @@ body {
 
 .control_box{
     display: flex;
+    justify-content: space-around;
 }
 
 .controls {
@@ -366,6 +367,7 @@ button.disabled {
     padding: 15px;
     position: absolute;
     bottom: 0px;
+    left: 0px;
 }
 
 .cancel button{

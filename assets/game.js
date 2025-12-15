@@ -11,6 +11,7 @@ const key = urlParams.get("key");
 
 // Change difficulty here: "medium" or "hard"
 let CPU_DIFFICULTY = "hard";
+const randomValue = +(Math.random() * 0.8 + 0.1).toFixed(2);
 
 const music = new Audio('./assets/music.mp3');
 const cardSound = new Audio('./assets/card.mp3');
@@ -68,8 +69,10 @@ const state = {
 }
 
 PreloadGame().then(initialize => {
-    if (!initialize.payload.payload.status) {
-        window.location.href = `${API_BASE_URL}/not_found`;
+    if (!initialize.payload.status) {
+        console.log(initialize);
+        
+        // window.location.href = `${API_BASE_URL}/not_found`;
     }
 
     state.playerScore = initialize.payload.payload.score;
@@ -138,13 +141,28 @@ const pickRandom = (array, items) => {
  ******************************/
 
 const generateGame = () => {
-    const dimensions = selectors.board.getAttribute('data-dimension')
+    let boardNumber;
+    let emoji;
+    if (randomValue < 0.6) {
+        boardNumber = 4;
+        emoji = [
+        '🍒', '🥕', '🍇',
+        '🍉', '🍌', '🥭', '🍍', '🍎', 
+        ];
+    }else{
+        boardNumber = 6;
+        emoji = ['🥔', '🍒', '🥑', '🌽', '🥕', '🍇',
+                '🍉', '🍌', '🥭', '🍍', '🍎', '🍋',
+                '🍓', '🥝', '🥥', '🫐', '🍑', '🍐',
+                '🥭', '🍊', '🍈', '🍏', '🍅', '🌶️']
+    }
+    const dimensions = boardNumber;
 
     if (dimensions % 2 !== 0) {
         throw new Error("Board dimension must be an even number.")
     }
 
-    const emojis = ['🥔', '🍒', '🥑', '🌽', '🥕', '🍇', '🍉', '🍌', '🥭', '🍍']
+    const emojis = emoji;
     const picks = pickRandom(emojis, (dimensions * dimensions) / 2)
     const items = shuffle([...picks, ...picks])
 
@@ -327,7 +345,7 @@ function flipCard(card) {
 
     UpdateGameData(state.playerScore, state.userFlips, state.cpuScore, state.cpuFlips).then(initialize => {
         if (!initialize.payload.status) {
-            console.log("failed");
+            alert(initialize.payload.message);
         } else{
             console.log("success");                  
         }
@@ -369,7 +387,7 @@ function checkWin() {
         if (userMoves > cpuMoves) {
             // Player wins
             message = "🎉 You Won! 🎉";
-            reward = OCTACOIN_REWARD;
+            reward = state.reward;
             gameState = 'won';
             win.play();
         } else if (userMoves === cpuMoves) {
@@ -384,9 +402,9 @@ function checkWin() {
             lose.play();
         }
 
-        gameOver(gameState).then(initialize => {
+        gameOver(state.playerScore, state.cpuScore).then(initialize => {
             if (!initialize.payload.status) {
-                console.log("failed");
+                alert(initialize.payload.message);
             } else{
                 localStorage.removeItem("memoryGameState");
                 console.log("gameOver");
@@ -411,6 +429,10 @@ function checkWin() {
     }
 }
 
+document.querySelector('.cancel_btn').addEventListener('click', () => {
+    window.location.href = `${API_BASE_URL}/home`;
+});
+
 async function playAgain() {
     document.querySelector('.replay').innerHTML = 'Initializing...';
     const response = await fetch(`${API_BASE_URL}/new_game`, {
@@ -428,9 +450,9 @@ async function playAgain() {
 
     if (result.status) {
         localStorage.removeItem("memoryGameState");
-        window.location.href = `http://127.0.0.1:8080?userid=${result.payload.userid}&id=${result.payload.gameid}&key=${result.payload.gameKey}`   
+        window.location.href = `${result.url}/?userid=${result.payload.userid}&id=${result.payload.gameid}&key=${result.payload.gameKey}`   
     }else{
-        document.querySelector('.replay').innerHTML = 'Failed to initialize new game';
+        document.querySelector('.replay').innerHTML = result.message;
     }
 }
 
@@ -539,7 +561,7 @@ async function UpdateGameData(score, moves, oppScore, oppMoves) {
     return { payload: result };
 }
 
-async function gameOver(state) {
+async function gameOver(userscore, oppscore) {
     const response = await fetch(`${API_BASE_URL}/end_game`, {
         method: "POST",
         headers: {
@@ -548,7 +570,8 @@ async function gameOver(state) {
         body: JSON.stringify({
             userid: userid,
             id: id,
-            state: state
+            userScore: userscore,
+            oppScore: oppscore
         })
     });
     const result = await response.json();
