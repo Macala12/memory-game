@@ -2,7 +2,7 @@
  *   CONFIGURATIONS
  ******************************/
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://octagames.ng';
 const urlParams = new URLSearchParams(window.location.search);
 const userid = urlParams.get("userid");
 const id = urlParams.get("id");
@@ -69,10 +69,8 @@ const state = {
 }
 
 PreloadGame().then(initialize => {
-    if (!initialize.payload.status) {
-        console.log(initialize);
-        
-        // window.location.href = `${API_BASE_URL}/not_found`;
+    if (!initialize.payload.status) {        
+        window.location.href = `${API_BASE_URL}/404`;
     }
 
     state.playerScore = initialize.payload.payload.score;
@@ -346,8 +344,6 @@ function flipCard(card) {
     UpdateGameData(state.playerScore, state.userFlips, state.cpuScore, state.cpuFlips).then(initialize => {
         if (!initialize.payload.status) {
             alert(initialize.payload.message);
-        } else{
-            console.log("success");                  
         }
     });
 }
@@ -407,7 +403,6 @@ function checkWin() {
                 alert(initialize.payload.message);
             } else{
                 localStorage.removeItem("memoryGameState");
-                console.log("gameOver");
             }
         });
 
